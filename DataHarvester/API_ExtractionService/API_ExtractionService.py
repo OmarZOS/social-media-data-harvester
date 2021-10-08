@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from API_ExtractionService.API_View import APi_View;
+from API_Views.API_View import APi_View;
 
 class API_ExtractionService(ABC):
     def __init__(self, apiName):

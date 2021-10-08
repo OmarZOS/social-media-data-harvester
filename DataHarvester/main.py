@@ -1,13 +1,14 @@
 
-from API_ExtractionService.Extractors.Transformers.FacebookTransformer import FacebookTransformer
+# from Twitter.API_ExtractionService.Extractors.Transformers.TwitterTransformer import TwitterTransformer
 from AppLoader import ServiceLocator
-from API_Controllers.FacebookController import FacebookController
+from Twitter.API_Controllers.TwitterController import TwitterController
+
 
 locator = ServiceLocator();
 #may be the first place to visit
 
-controller = FacebookController("Facebook");
+controller = TwitterController("Twitter");
 print(controller.extractionService.serviceName())
 controller.extractionService.StartHarvestingData()
-ServiceLocator().getResultPublisher().publish("Facebook","zeafsq")
-ServiceLocator().getResultPublisher().publish("Facebook","deydey")
+ServiceLocator().getResultPublisher().publish("Twitter","seasons they will change")
+ServiceLocator().getResultPublisher().publish("Twitter","Life can make you pay")
