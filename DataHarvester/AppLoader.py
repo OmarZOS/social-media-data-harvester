@@ -28,7 +28,6 @@ class ServiceLocator:
             self.storageservice = neo4jService()
         return self.storageservice;
 
-    @property
     def getResultPublisher(self):
         if self.__resultPublisher == None:
             self.__resultPublisher = ResultPublisher(user="omar",password="omar")

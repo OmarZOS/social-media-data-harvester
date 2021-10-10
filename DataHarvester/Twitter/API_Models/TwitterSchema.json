@@ -1,30 +1,30 @@
 
 {
     "user" : [
-                "id",
-                "id_str",
-                "name",
-                "screen_name",
-                "location",
-                "url",
-                "description",
-                "verified",
-                "followers_count",
-                "friends_count",
-                "listed_count",
-                "favourites_count",
-                "statuses_count",
-                "created_at",
-                "utc_offset",
-                "time_zone",
-                "geo_enabled",
-                "lang",
-                "contributors_enabled",
-                "is_translator",
-                "default_profile",
-                "following",
-                "follow_request_sent",
-                "notifications"
+        "id",
+        "id_str",
+        "name",
+        "screen_name",
+        "location",
+        "url",
+        "description",
+        "verified",
+        "followers_count",
+        "friends_count",
+        "listed_count",
+        "favourites_count",
+        "statuses_count",
+        "created_at",
+        "utc_offset",
+        "time_zone",
+        "geo_enabled",
+        "lang",
+        "contributors_enabled",
+        "is_translator",
+        "default_profile",
+        "following",
+        "follow_request_sent",
+        "notifications"
     ],
     "coordinates" : [
         "coordinated",
@@ -43,11 +43,11 @@
     ],
     "entities": 
          [
-            "hashtags",
-            "urls",
-            "user_mentions",
-            "symbols",
-            "media"
+        "hashtags",
+        "urls",
+        "user_mentions",
+        "symbols",
+        "media"
         ],
     "media":
         [
