@@ -1,11 +1,12 @@
 
 
 
+import json
 import os
 import time
+import networkx
 import tweepy
 
-from API_ExtractionService.Extractors.TwitterExtractor import TwitterExtractor
 
 
 class UserExtractor:
@@ -14,12 +15,23 @@ class UserExtractor:
     Time=0
     Limited_number_of_followers=4000
     Limited_number_of_friends=4000
+    fullStructure = None
+
 
     @staticmethod
-    def crawlUser(self,api,uid,graph,userQueue,coordinatesQueue,placeQueue,geoQueue,mediaQueue,tweetQueue):
+    def crawlUser(self,api,graph,fullSchema,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue):
+        UserExtractor.fullStructure = fullSchema
+
+        # print(api)
+        # print(fullSchema)
+        # print(userQueue)
+        # print(coordinatesQueue)
+
         while True:
             freshUser = userQueue.get()
-            UserExtractor.insertUser(freshUser,graph)
+
+
+            UserExtractor.insertUser(user=freshUser,graph=graph)
 
 
             # coordinatesQueue.put(freshUser.)
@@ -30,11 +42,12 @@ class UserExtractor:
 
             try:
             
-                # print(" node: ",graph.node[user.id]['screen_name']," is it checked : ",graph.node[user.id]['checked'])
+                print(" node: ",freshUser.screen_name," is it checked : ","no")
                 # check if the node has not been check it and belong to the disired location
-                print("Collecting data for",graph.node[freshUser.id]['screen_name'],freshUser.id,graph.node[freshUser.id]['location'])  
-                print("The number of followers of the user are : " + str(graph.node[freshUser.id]['followers_count']))
-                print("The number of followers of the user are : " + str(graph.node[freshUser.id]['friends_count']))
+                # print(graph)
+                print("Collecting data for",freshUser.screen_name,freshUser.id,freshUser.location)  
+                print("The number of followers of the user are : " , freshUser.followers_count)
+                print("The number of followers of the user are : " , freshUser.friends_count)
                 
                 UserExtractor.scrapFollowers(freshUser,api,graph)
                 UserExtractor.scrapFriends(freshUser,api,graph)
@@ -66,7 +79,7 @@ class UserExtractor:
                     print ("Number Of nodes collected so far:", graph.number_of_nodes())
                     print ("Number Of edges collected so far:", graph.number_of_edges())
                     # nx.write_gexf(G, "Graph.gexf") 
-                    # json_graph.node_link_data(G)
+                    # json_graph.nodes_link_data(G)
 
                     time.sleep(60)
 
@@ -75,24 +88,32 @@ class UserExtractor:
 
 
 
+
     @staticmethod    
-    def insertUser(self,user,graph): # verifies existence inside
+    def insertUser(graph : networkx.DiGraph,user : tweepy.User): # verifies existence inside
         attributes = {}
+        # user= json.dumps(user)
+
+        # print(user.id)
+        # print(graph)
+        # print(UserExtractor.fullStructure)
         if(user.id in graph): #nothing to do here
             return 
-        for attribute in TwitterExtractor.fullStructure["user"]:
-            attributes[attribute+""] = user[attribute]
-
+        for attribute in UserExtractor.fullStructure["user"]:
+            attributes[str(attribute)+""] = getattr(user,attribute)
         
 
-        graph.add_edges_from([(user.id,attributes)])
+        # print(attributes)
+        
+        # print(attributes.items())
+        graph.add_edges_from([(user.id,tuple(attributes))])
 
     @staticmethod
     def scrapFriends(freshUser,api,graph):
-        if graph.node[freshUser.id]['friends_count']<UserExtractor.Limited_number_of_friends:
+        if graph[freshUser.id]['friends_count']<UserExtractor.Limited_number_of_friends:
             # collect the list of the user v friends
             Friends = []
-            for page in tweepy.Cursor(api.get_friends, screen_name=graph.node[freshUser.id]['screen_name'], wait_on_rate_limit=True,count=200).pages():
+            for page in tweepy.Cursor(api.get_friends, screen_name=graph.nodes[freshUser.id]['screen_name'], wait_on_rate_limit=True,count=200).pages():
                 try:
                     Friends.extend(page)
                 except tweepy.TweepError as e:
@@ -101,22 +122,22 @@ class UserExtractor:
             for user in Friends:
                 user.screen_name
                 Time=0
-                # graph.node[user.id]['checked']=1
-                UserExtractor.insertUser(api,user,graph)
+                # graph.nodes[user.id]['checked']=1
+                UserExtractor.insertUser(graph=graph,user=user)
                 graph.add_edge(freshUser,user.id,other= "friend")
             print ("\t\tNumber Of nodes collected so far followers: ", graph.number_of_nodes())
             print ("\t\tNumber Of edge collected so far followers: ", graph.number_of_edges())
             # nx.write_gexf(G, "Graph.gexf") 
-            # json_graph.node_link_data(G)
+            # json_graph.nodes_link_data(G)
             print ("\tNumber Of nodes collected so far ", graph.number_of_nodes())
             print ("\tNumber Of edges collected so far", graph.number_of_edges())
 
     @staticmethod
     def scrapFollowers(freshUser,api,graph):
-        if graph.node[freshUser.id]['followers_count']<UserExtractor.Limited_number_of_followers:
+        if graph[freshUser.id]['followers_count']<UserExtractor.Limited_number_of_followers:
             # get the follower the the user
             followers = []
-            for page in tweepy.Cursor(api.get_followers, screen_name=graph.node[freshUser.id]['screen_name'], wait_on_rate_limit=True,count=300).pages():
+            for page in tweepy.Cursor(api.get_followers, screen_name=graph.nodes[freshUser.id]['screen_name'], wait_on_rate_limit=True,count=300).pages():
                 try:
                     followers.extend(page)
                 except tweepy.TweepError as e:
@@ -125,7 +146,7 @@ class UserExtractor:
             for user in followers:
                 user.screen_name
                 Time=0                  
-                UserExtractor.insertUser(api,user,graph)
+                UserExtractor.insertUser(user=user,graph=graph)
 
                 graph.add_edge(user.id,freshUser,other= "follows")
             print ("\t\tNumber Of nodes collected so far followers:", graph.number_of_nodes())

@@ -4,6 +4,6 @@
 
 class CoordinateExtractor:
     @staticmethod
-    def crawlCoordinates(self,api,uid,graph,userQueue,coordinatesQueue,placeQueue,geoQueue,mediaQueue,tweetQueue):
+    def crawlCoordinates(self,api,fullStructure,uid,graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue):
         pass
         

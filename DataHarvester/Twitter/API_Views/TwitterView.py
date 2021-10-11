@@ -11,13 +11,14 @@ class TwitterView(APi_View):
         self.viewstructureFilePath = filePath;
         self.apiName = api;
         # print(self.proxy.apiName)
-        modelProcess = Process(target=TwitterModel, args=(api,"omar","omar",37604))
+        modelProcess = Process(target=TwitterModel, args=(api,"omar","omar",37604,"localhost","data"))
         modelProcess.start()
         modelProcess.join
         self.initiateApiModel(modelProcess) #Process(target=TwitterModel, args=(api,"omar","omar"))
     
     def setDataStructure(self,apiJsonStruct):
-        self.api_model.dataModel = apiJsonStruct
+        self.customDataModel = apiJsonStruct
+        
 
         
 

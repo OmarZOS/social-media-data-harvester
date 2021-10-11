@@ -10,14 +10,19 @@ class API_extractionModel(ResultListener):
     #     super(*args)
     #     self.storageService = ServiceLocator.storageService;
         # self.dataModel = dataModele;
+
+    __dataModel = {}  
+
         
-    @property
+
+    
+    
     def dataModel(self):
-        return self.dataModel;
+        return self.__dataModel;
     
     # @property.setter
-    def dataModel(self,dataModel):
-        self.dataModel = dataModel
+    # def dataModel(self,dataModel):
+    #     self._dataModel = dataModel
 
     def saveData(self,data):
         self.storageService.saveData(data);

@@ -8,14 +8,15 @@ from pika.exchange_type import ExchangeType
 
 class ResultListener:
     
-    def __init__(self,apiName,user,password,portNumber,hostName="localhost",exchange="data"):
+    def __init__(*args,**kwargs):#,apiName,user,password,portNumber,hostName="localhost",exchange="data"
         # self.credentials = pika.PlainCredentials(user,password)
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=hostName))#port=portNumber, ,  credentials= self.credentials
-        self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange,  exchange_type=ExchangeType.direct)#durable=True,
-        self.channel.basic_consume(queue=str(apiName), on_message_callback=self.receiveData, auto_ack=True)
-        print("starting consumption..")
-        self.channel.start_consuming()
+        if(len(args)>2): # to know if it was only a cast..
+            args[0].connection = pika.BlockingConnection(pika.ConnectionParameters(host=args[5]))#port=portNumber, ,  credentials= self.credentials
+            args[0].channel = args[0].connection.channel()
+            args[0].channel.exchange_declare(args[6],  exchange_type=ExchangeType.direct)#durable=True,
+            args[0].channel.basic_consume(queue=str(args[1]), on_message_callback=args[0].receiveData, auto_ack=True)
+            print("starting consumption..")
+            args[0].channel.start_consuming()
         
     @abstractmethod
     def receiveData(ch,method,properties,body):

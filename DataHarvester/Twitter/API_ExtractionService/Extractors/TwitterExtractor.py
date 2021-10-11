@@ -1,11 +1,13 @@
 
 
-from API_ExtractionService.Extractors.UserExtractor import UserExtractor
-from API_ExtractionService.Extractors.coordinatesExtractor import CoordinateExtractor
-from API_ExtractionService.Extractors.mediaExtractor import MediaExtractor
-from API_ExtractionService.Extractors.placeExtractor import PlaceExtractor
-from API_ExtractionService.Extractors.tweetExtractor import TweetExtractor
-from API_ExtractionService.Extractors.urlExtractor import URLExtractor
+from networkx.classes import graph
+from networkx.readwrite import json_graph
+from Twitter.API_ExtractionService.Extractors.UserExtractor import UserExtractor
+from Twitter.API_ExtractionService.Extractors.coordinatesExtractor import CoordinateExtractor
+from Twitter.API_ExtractionService.Extractors.mediaExtractor import MediaExtractor
+from Twitter.API_ExtractionService.Extractors.placeExtractor import PlaceExtractor
+from Twitter.API_ExtractionService.Extractors.tweetExtractor import TweetExtractor
+from Twitter.API_ExtractionService.Extractors.urlExtractor import URLExtractor
 from Twitter.API_ExtractionService.Extractors.Transformers.TwitterTransformer import TwitterTransformer
 from API_ExtractionService.Network_Extractor import NetworkExtractor
 
@@ -48,15 +50,12 @@ class TwitterExtractor(NetworkExtractor):
         self.initialiseAuth()
         self.api = tweepy.API(self.auth[0])
 
-        self.graph = self.createGraph()
+        self.graph = nx.DiGraph(self.createGraph())
 
-        if self.graph.number_of_nodes() ==0 :
-            UserExtractor.crawlUser(self.firstUserID)
-
-        #queueing before threading 
-
+        
         userQueue = Queue(maxsize=0)
-        userQueue.put(firstUser = self.api.get_user(user_id=self.firstUserID))
+        firstUser = self.api.get_user(user_id=self.firstUserID)
+        userQueue.put(firstUser)
         coordinatesQueue = Queue(maxsize=0)
         placeQueue = Queue(maxsize=0)
         urlQueue = Queue(maxsize=0)
@@ -64,27 +63,35 @@ class TwitterExtractor(NetworkExtractor):
         tweetQueue = Queue(maxsize=0)
 
 
-        userAgent = Thread(target=UserExtractor.crawlUser, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+
+        if self.graph.number_of_nodes() ==0 :
+            UserExtractor.crawlUser(UserExtractor,api=self.api,graph=self.graph,fullSchema=self.fullStructure,userQueue=userQueue,coordinatesQueue=coordinatesQueue,placeQueue=placeQueue,urlQueue=urlQueue,mediaQueue=mediaQueue,tweetQueue=tweetQueue)
+
+        #queueing before threading 
+
+
+
+        userAgent = Thread(target=UserExtractor.crawlUser, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
         userAgent.setDaemon(True)
         userAgent.start()
         
-        coordinatesAgent = Thread(target=CoordinateExtractor.crawlCoordinates, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        coordinatesAgent.setDaemon(True)
-        coordinatesAgent.start()
+        # coordinatesAgent = Thread(target=CoordinateExtractor.crawlCoordinates, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # coordinatesAgent.setDaemon(True)
+        # coordinatesAgent.start()
 
-        placeAgent = Thread(target=PlaceExtractor.crawlPlace, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        placeAgent.setDaemon(True)
-        placeAgent.start()
+        # placeAgent = Thread(target=PlaceExtractor.crawlPlace, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # placeAgent.setDaemon(True)
+        # placeAgent.start()
 
-        urlAgent = Thread(target=URLExtractor.crawlURL, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        urlAgent.setDaemon(True)
-        urlAgent.start()
+        # urlAgent = Thread(target=URLExtractor.crawlURL, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # urlAgent.setDaemon(True)
+        # urlAgent.start()
 
-        mediaAgent = Thread(target=MediaExtractor.crawlMedia, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        mediaAgent.setDaemon(True)
-        mediaAgent.start()
+        # mediaAgent = Thread(target=MediaExtractor.crawlMedia, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # mediaAgent.setDaemon(True)
+        # mediaAgent.start()
 
-        tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
         tweetAgent.setDaemon(True)
         tweetAgent.start()
 
@@ -98,86 +105,7 @@ class TwitterExtractor(NetworkExtractor):
         tweetQueue.join()    
 
 
-        Nodeslist = [v for v in self.graph.nodes()]
-
-        # set the waiting time
-        Time=0
-        Limited_number_of_followers=4000
-        Limited_number_of_friends=4000
-
-        for v in Nodeslist:
-    
-            try:
-            
-                print(" node: ",self.graph.node[user.id]['screen_name']," is it checked : ",self.graph.node[user.id]['checked'])
-                # check if the node has not been check it and belong to the disired location
-                if  self.graph.node[user.id]['checked'] == 0 and self.graph.node[user.id]['location'].find("Algeria") != -1 : 
-                    print("Collecting data for",self.graph.node[user.id]['screen_name'],v,self.graph.node[user.id]['location'])  
-                    print("The number of followers of the user are : " + str(self.graph.node[user.id]['followers_count']))
-                    print("The number of followers of the user are : " + str(self.graph.node[user.id]['friends_count']))
-                    if self.graph.node[user.id]['followers_count']<Limited_number_of_followers:
-                        # get the follower the the user v
-                        followers = []
-                        for page in tweepy.Cursor(self.api.get_followers, screen_name=self.graph.node[user.id]['screen_name'], wait_on_rate_limit=True,count=300).pages():
-                            try:
-                                followers.extend(page)
-                            except tweepy.TweepError as e:
-                                print("Going to sleep:", e)
-                                time.sleep(60)
-                        self.graph.node[user.id]['checked']=1
-                        for user in followers:
-                            user.screen_name
-                            Time=0                  
-                            UserExtractor.insertUser(self.api,user,self.graph)
-
-                            self.graph.add_edge(user.id,v)
-                        print ("\t\tNumber Of nodes collected so far followers:", self.graph.number_of_nodes())
-                        print ("\t\tNumber Of edges collected so far followers:", self.graph.number_of_edges())
-                    else:
-                        self.graph.node[user.id]['checked']=2
-                    if self.graph.node[user.id]['friends_count']<Limited_number_of_friends:
-                        # collect the list of the user v friends
-                        Friends = []
-                        for page in tweepy.Cursor(self.api.get_friends, screen_name=self.graph.node[user.id]['screen_name'], wait_on_rate_limit=True,count=200).pages():
-                            try:
-                                Friends.extend(page)
-                            except tweepy.TweepError as e:
-                                print("Going to sleep:", e)
-                                time.sleep(60)
-                        for user in Friends:
-                            user.screen_name
-                            Time=0
-                            self.graph.node[user.id]['checked']=1
-                            UserExtractor.insertUser(self.api,user,self.graph)
-                            self.graph.add_edge(v,user.id)
-                        print ("\t\tNumber Of nodes collected so far followers: ", self.graph.number_of_nodes())
-                        print ("\t\tNumber Of edge collected so far followers: ", self.graph.number_of_edges())
-                    else:
-                        self.graph.node[user.id]['checked']=2
-                    # nx.write_gexf(G, "Graph.gexf") 
-                    # json_graph.node_link_data(G)
-                    print ("\tNumber Of nodes collected so far ", self.graph.number_of_nodes())
-                    print ("\tNumber Of edges collected so far", self.graph.number_of_edges())
-
-
-
-
-            except tweepy.TweepError as ex: 
-                if ex.reason == "Not authorized.":
-                    print("exep ", ex)
-                    self.graph.node[user.id]['checked']=2
-                else:
-                    os.system('clear')
-                    print(ex)
-                    print("waiting time so far : ", Time)
-                    Time+=1
-                    print ("Number Of nodes collected so far:", self.graph.number_of_nodes())
-                    print ("Number Of edges collected so far:", self.graph.number_of_edges())
-                    # nx.write_gexf(G, "Graph.gexf") 
-                    # json_graph.node_link_data(G)
-
-                    time.sleep(60)
-
+        
 
     
 

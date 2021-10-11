@@ -4,7 +4,7 @@ from AppLoader import ServiceLocator
 from Twitter.API_Controllers.TwitterController import TwitterController
 
 
-locator = ServiceLocator();
+locator = ServiceLocator("launch");# passing this parameter just to avoid recreation
 #may be the first place to visit
 
 controller = TwitterController("Twitter");

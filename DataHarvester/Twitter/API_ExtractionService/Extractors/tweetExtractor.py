@@ -1,11 +1,12 @@
 
 
-from API_ExtractionService.Extractors.TwitterExtractor import TwitterExtractor
 
 
 class TweetExtractor:
+    fullStructure = None
     @staticmethod
-    def crawlTweet(self,api,uid,graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue):
+    def crawlTweet(self,api,fullStructure,uid,graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue):
+        self.fullStructure = fullStructure
         while True:
             freshTweet = tweetQueue.get()
             TweetExtractor.insertTweet(freshTweet,graph)
@@ -49,7 +50,7 @@ class TweetExtractor:
         attributes = {}
         if(tweet.id in graph): #nothing to do here
             return 
-        for attribute in TwitterExtractor.fullStructure["tweet"]:
+        for attribute in TweetExtractor.fullStructure["tweet"]:
             attributes[attribute+""] = tweet[attribute]
 
         graph.add_edges_from([(tweet.id,attributes)])

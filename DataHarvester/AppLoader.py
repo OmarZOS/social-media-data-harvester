@@ -16,11 +16,12 @@ class ServiceLocator:
             ServiceLocator()
         return ServiceLocator.__instance
     def __init__(self,*args):
-        """ Virtually private constructor. """
-        if ServiceLocator.__instance != None:
-               print("[WARNING] ServiceLocator class is a singleton! be careful..")
-        else:
-               ServiceLocator.__instance = self
+        if(len(args)==1):
+            """ Virtually private constructor. """
+            if ServiceLocator.__instance != None:
+                print("[WARNING] ServiceLocator class is a singleton! be careful..")
+            else:
+                ServiceLocator.__instance = self
 
     # @staticmethod
     def storageService(self):

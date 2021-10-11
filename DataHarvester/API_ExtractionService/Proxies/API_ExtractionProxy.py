@@ -2,7 +2,7 @@ from API_ExtractionService.API_ExtractionService import API_ExtractionService
 from API_Views.API_View import APi_View
 
 class API_ExtractionProxy(API_ExtractionService):
-    dynamicStructure = {}
+    fullStructure = {}
 
     view = None
     apiName=""
