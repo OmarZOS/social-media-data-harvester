@@ -1,5 +1,6 @@
 
 
+import json
 from networkx.classes import graph
 from networkx.readwrite import json_graph
 from Twitter.API_ExtractionService.Extractors.UserExtractor import UserExtractor
@@ -27,11 +28,23 @@ class TwitterExtractor(NetworkExtractor):
     access_key=[]
     access_secret=[]
 
-    consumer_key.append("aRPAzCMKhotCBKqlStSk1IN8S")
-    consumer_secret.append("UAo5USjuLKE6SzIlw7EpCklZF8MeYg8kLv4KUqZAMcU4cSPTNr")
-    access_key.append("1440700278613839878-QuYijjPLUXgWbTTvVYQaBaZJnX7zcl")
-    access_secret.append("Z5rKjgfClqcmaSfKdebnkqsmsBpCV9FqspRYhLCaHixHR")
+    # consumer_key.append("aRPAzCMKhotCBKqlStSk1IN8S")
+    # consumer_secret.append("UAo5USjuLKE6SzIlw7EpCklZF8MeYg8kLv4KUqZAMcU4cSPTNr")
+    # access_key.append("1440700278613839878-QuYijjPLUXgWbTTvVYQaBaZJnX7zcl")
+    # access_secret.append("Z5rKjgfClqcmaSfKdebnkqsmsBpCV9FqspRYhLCaHixHR")
+    
+    consumer_key.append("rk1XoOWV2Q0krplJmZGzcyIxT")
+    consumer_secret.append("099nyxS6kXnNCjzQ9b6b07s7aKLdiJfUPVQefxlVQ2ZelnGSsp")
+    access_key.append("963769414163271680-QfZGuBqaumPoBq1jJAQuQEE4pi9gvkY")
+    access_secret.append("qDMEnozHGWV9AQkFGG4PhJS7dRpBcsoau0nbaj0hbpXZl")
 
+    consumer_key.append("vjGlLuhATq8oxZBqQh8ToN1b9")
+    consumer_secret.append("PCYaM4s5HC2zV0QVD4TpYw7pUTAllQ4KXbVD1tYI4R0KdBPdbS")
+    access_key.append("1442067218963976194-Cu17QV8YXTzqkwtoVBbLplUWWXyKfb")
+    access_secret.append("icbt9ym2QMDtexfEsjNlK5kYafZ64SRGZkZwpvM5BXgxT")
+
+    
+    
     auth = []
 
     firstUserID = "1192946702891790336" #Abd Elmadjid Tebboune
@@ -64,8 +77,8 @@ class TwitterExtractor(NetworkExtractor):
 
 
 
-        if self.graph.number_of_nodes() ==0 :
-            UserExtractor.crawlUser(UserExtractor,api=self.api,graph=self.graph,fullSchema=self.fullStructure,userQueue=userQueue,coordinatesQueue=coordinatesQueue,placeQueue=placeQueue,urlQueue=urlQueue,mediaQueue=mediaQueue,tweetQueue=tweetQueue)
+        # if self.graph.number_of_nodes() ==0 :
+        #     UserExtractor.crawlUser(UserExtractor,api=self.api,graph=self.graph,fullSchema=self.fullStructure,userQueue=userQueue,coordinatesQueue=coordinatesQueue,placeQueue=placeQueue,urlQueue=urlQueue,mediaQueue=mediaQueue,tweetQueue=tweetQueue)
 
         #queueing before threading 
 
@@ -91,19 +104,24 @@ class TwitterExtractor(NetworkExtractor):
         # mediaAgent.setDaemon(True)
         # mediaAgent.start()
 
-        tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        tweetAgent.setDaemon(True)
-        tweetAgent.start()
+        # tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # tweetAgent.setDaemon(True)
+        # tweetAgent.start()
 
 
         userQueue.join()
-        userQueue.join()
+        # userQueue.join()
         coordinatesQueue.join()
         placeQueue.join()
         urlQueue.join()
         mediaQueue.join()
         tweetQueue.join()    
 
+        print("Extraction complete.")
+        self.save_json("Graph.json",self.graph)
+        print("")
+
+    
 
         
 
@@ -127,6 +145,10 @@ class TwitterExtractor(NetworkExtractor):
     def connectAPI(key):
         pass
 
+    def save_json(self,filename,graph):
+        g = graph
+        g_json = json_graph.node_link_data(g)
+        json.dump(g_json,open(filename,'w'),indent=2)
 
         
 

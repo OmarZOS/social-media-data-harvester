@@ -9,7 +9,7 @@ class TweetExtractor:
         self.fullStructure = fullStructure
         while True:
             freshTweet = tweetQueue.get()
-            TweetExtractor.insertTweet(freshTweet,graph)
+            # TweetExtractor.insertTweet(freshTweet,graph)
             
             # entities = freshTweet["entities"]
             
