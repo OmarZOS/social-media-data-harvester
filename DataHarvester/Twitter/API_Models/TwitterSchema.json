@@ -64,8 +64,7 @@
         "created_at",
         "id",
         "id_str",
-        "text",
-        "user",
+        "full_text",
         "entities"
     ]
 

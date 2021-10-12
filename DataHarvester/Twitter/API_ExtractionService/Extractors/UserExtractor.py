@@ -27,13 +27,13 @@ class UserExtractor:
         # print(fullSchema)
         # print(userQueue)
         # print(coordinatesQueue)
+        freshUser = userQueue.get()
+        UserExtractor.insertUser(user=freshUser,graph=graph)
 
         while True:
             # print("again")
-            freshUser = userQueue.get()
             print(freshUser.screen_name)
 
-            UserExtractor.insertUser(user=freshUser,graph=graph)
 
 
             # coordinatesQueue.put(freshUser.)
@@ -66,7 +66,10 @@ class UserExtractor:
                            )
 
                 for tweet in usertweets:
+                    print("adding a tweet")
+                    graph.add_edge(freshUser.id,tweet.id,other= "published")
                     tweetQueue.put(tweet)
+
                     
 
 
@@ -77,6 +80,7 @@ class UserExtractor:
                 #emptying the queue to terminate the thread..
                 while not userQueue.empty():
                     userQueue.task_done()
+                    
                     userQueue.get()
                 
 
@@ -97,14 +101,20 @@ class UserExtractor:
                 #     time.sleep(60)
             # print("done scraping")
             userQueue.task_done()
+            freshUser = userQueue.get()
 
 
 
 
-
+    count = 0
 
     @staticmethod
     def insertUser(graph : networkx.DiGraph,user : tweepy.User): # verifies existence inside
+        # a workaround to limit token usage..
+        UserExtractor.count+=1
+        if UserExtractor.count > 5 :
+            raise tweepy.TweepyException();
+        
         attributes = {}
         # user= json.dumps(user)
 
@@ -120,7 +130,8 @@ class UserExtractor:
         # print(attributes)
         
         # print(attributes.items())
-        graph.add_nodes_from([(user.id,str(attributes))])
+        if(len(attributes.items()) > 2) :
+            graph.add_nodes_from([(user.id,[k for k in attributes.items()])],color="green")
 
     @staticmethod
     def scrapFriends(freshUser,api,graph,userQueue:Queue):

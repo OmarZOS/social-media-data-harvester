@@ -26,7 +26,7 @@ class ServiceLocator:
     # @staticmethod
     def storageService(self):
         if self.storageservice == None:
-            self.storageservice = neo4jService()
+            self.storageservice = neo4jService(scheme="neo4j",host_name="localhost",port=7687,user="neo4j",password="omar")
         return self.storageservice;
 
     def getResultPublisher(self):

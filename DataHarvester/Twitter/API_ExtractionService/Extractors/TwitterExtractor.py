@@ -38,10 +38,10 @@ class TwitterExtractor(NetworkExtractor):
     access_key.append("963769414163271680-QfZGuBqaumPoBq1jJAQuQEE4pi9gvkY")
     access_secret.append("qDMEnozHGWV9AQkFGG4PhJS7dRpBcsoau0nbaj0hbpXZl")
 
-    consumer_key.append("vjGlLuhATq8oxZBqQh8ToN1b9")
-    consumer_secret.append("PCYaM4s5HC2zV0QVD4TpYw7pUTAllQ4KXbVD1tYI4R0KdBPdbS")
-    access_key.append("1442067218963976194-Cu17QV8YXTzqkwtoVBbLplUWWXyKfb")
-    access_secret.append("icbt9ym2QMDtexfEsjNlK5kYafZ64SRGZkZwpvM5BXgxT")
+    # consumer_key.append("vjGlLuhATq8oxZBqQh8ToN1b9")
+    # consumer_secret.append("PCYaM4s5HC2zV0QVD4TpYw7pUTAllQ4KXbVD1tYI4R0KdBPdbS")
+    # access_key.append("1442067218963976194-Cu17QV8YXTzqkwtoVBbLplUWWXyKfb")
+    # access_secret.append("icbt9ym2QMDtexfEsjNlK5kYafZ64SRGZkZwpvM5BXgxT")
 
     
     
@@ -88,6 +88,10 @@ class TwitterExtractor(NetworkExtractor):
         userAgent.setDaemon(True)
         userAgent.start()
         
+        tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        tweetAgent.setDaemon(True)
+        tweetAgent.start()
+
         # coordinatesAgent = Thread(target=CoordinateExtractor.crawlCoordinates, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
         # coordinatesAgent.setDaemon(True)
         # coordinatesAgent.start()
@@ -104,18 +108,14 @@ class TwitterExtractor(NetworkExtractor):
         # mediaAgent.setDaemon(True)
         # mediaAgent.start()
 
-        # tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        # tweetAgent.setDaemon(True)
-        # tweetAgent.start()
 
 
         userQueue.join()
-        # userQueue.join()
+        tweetQueue.join()    
         coordinatesQueue.join()
         placeQueue.join()
         urlQueue.join()
         mediaQueue.join()
-        tweetQueue.join()    
 
         print("Extraction complete.")
         self.save_json("Graph.json",self.graph)

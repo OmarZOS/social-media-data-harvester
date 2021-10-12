@@ -12,5 +12,5 @@ controller = TwitterController("Twitter");
 print(controller.extractionService.serviceName())
 controller.extractionService.StartHarvestingData()
 ServiceLocator().getResultPublisher().publish("Twitter","seasons they will change")
-ServiceLocator().getResultPublisher().publish("Twitter","Life can make you pay")
-ServiceLocator().getResultPublisher().publish("Twitter","Death can make you hard..")
+ServiceLocator().getResultPublisher().publish("Twitter","bitte lass mich alein..")
+ServiceLocator().getResultPublisher().publish("Twitter","not to fall apart..")
