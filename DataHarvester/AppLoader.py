@@ -2,8 +2,8 @@
 
 
 from API_ExtractionService.Extractors.Transformers.Publishers.PublishingService import ResultPublisher
-from StorageService.neo4jService import neo4jService
-
+from StorageServices.StorageService import StorageService
+from StorageServices.neo4jService import neo4jService
 
 
 class ServiceLocator:

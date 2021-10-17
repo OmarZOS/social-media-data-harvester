@@ -28,20 +28,20 @@ class TwitterExtractor(NetworkExtractor):
     access_key=[]
     access_secret=[]
 
-    # consumer_key.append("aRPAzCMKhotCBKqlStSk1IN8S")
-    # consumer_secret.append("UAo5USjuLKE6SzIlw7EpCklZF8MeYg8kLv4KUqZAMcU4cSPTNr")
-    # access_key.append("1440700278613839878-QuYijjPLUXgWbTTvVYQaBaZJnX7zcl")
-    # access_secret.append("Z5rKjgfClqcmaSfKdebnkqsmsBpCV9FqspRYhLCaHixHR")
-    
-    consumer_key.append("rk1XoOWV2Q0krplJmZGzcyIxT")
-    consumer_secret.append("099nyxS6kXnNCjzQ9b6b07s7aKLdiJfUPVQefxlVQ2ZelnGSsp")
-    access_key.append("963769414163271680-QfZGuBqaumPoBq1jJAQuQEE4pi9gvkY")
-    access_secret.append("qDMEnozHGWV9AQkFGG4PhJS7dRpBcsoau0nbaj0hbpXZl")
+    consumer_key.append(str(os.getenv("TWEET_CONSUM")))
+    consumer_secret.append(str(os.getenv("TWEET_SECRET")))
+    access_key.append(str(os.getenv("TWEET_KEY")))
+    access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET")))
 
-    # consumer_key.append("vjGlLuhATq8oxZBqQh8ToN1b9")
-    # consumer_secret.append("PCYaM4s5HC2zV0QVD4TpYw7pUTAllQ4KXbVD1tYI4R0KdBPdbS")
-    # access_key.append("1442067218963976194-Cu17QV8YXTzqkwtoVBbLplUWWXyKfb")
-    # access_secret.append("icbt9ym2QMDtexfEsjNlK5kYafZ64SRGZkZwpvM5BXgxT")
+    # consumer_key.append(str(os.getenv("TWEET_CONSUM1")))
+    # consumer_secret.append(str(os.getenv("TWEET_SECRET1")))
+    # access_key.append(str(os.getenv("TWEET_KEY1")))
+    # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET1")))
+
+    # consumer_key.append(str(os.getenv("TWEET_CONSUM2")))
+    # consumer_secret.append(str(os.getenv("TWEET_SECRET2")))
+    # access_key.append(str(os.getenv("TWEET_KEY2")))
+    # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET2")))
 
     
     

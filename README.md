@@ -4,11 +4,8 @@
 ## **Description** :
 
 	This platform was designed to be a universal social media dataset generator,
-
 	it collects the data using the NetworkExtractor according to a global schema which is predefined inside in the Model folder.
-
 	The resulting graph is passed through a Transformer class to apply any cleaning or restraints either on the schema or the data.
-
 	The final graph is conducted through a canal to be received by the listening storage services. 
 	
 
@@ -48,9 +45,19 @@ Giving that user adiministraitve rights
 
 ## **Neo4j** :
 	
+	sudo apt install apt-transport-https ca-certificates curl software-properties-common
+	curl -fsSL https://debian.neo4j.com/neotechnology.gpg.key | sudo apt-key add -
+	sudo add-apt-repository "deb https://debian.neo4j.com stable 4.1"
+	sudo apt install neo4j
+	sudo systemctl enable neo4j.service
+	sudo systemctl status neo4j.service
 	pip install neo4j
-	
-
+	# to interact with neo4j from CLI
+	cypher-shell
+	# allow remote connections
+	sudo nano /etc/neo4j/neo4j.conf
+	# add this line
+	dbms.default_listen_address=0.0.0.0
     
 
 
@@ -64,14 +71,18 @@ Giving that user adiministraitve rights
 
 
 ## **Progress** : 
- - [x] Current code consistency
+ - [ ] Current code consistency
  - [x] Multithreading 
  - [x] Graph oriented database storage
  - [ ] Document oriented database storage
+ - [ ] Infrastructure as a service
+ - [ ] Database as a service
+ - [ ] Communications as a service
  - [x] **Twitter** support
  - [ ] **Youtube** support
  - [ ] **LinkedIn** support
  - [ ] **Facebook** support
  - [ ] **Instagram** support
  - [ ] Graphical user interface
+ - [ ] Encrypting network circulating data
 
