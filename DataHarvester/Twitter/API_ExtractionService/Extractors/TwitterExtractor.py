@@ -28,26 +28,41 @@ class TwitterExtractor(NetworkExtractor):
     access_key=[]
     access_secret=[]
 
-    consumer_key.append(str(os.getenv("TWEET_CONSUM")))
-    consumer_secret.append(str(os.getenv("TWEET_SECRET")))
-    access_key.append(str(os.getenv("TWEET_KEY")))
-    access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET")))
+    # consumer_key.append(str(os.getenv("tweet_consum")))
+    # consumer_secret.append(str(os.getenv("tweet_secret")))
+    # access_key.append(str(os.getenv("tweet_key")))
+    # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET")))
 
-    # consumer_key.append(str(os.getenv("TWEET_CONSUM1")))
-    # consumer_secret.append(str(os.getenv("TWEET_SECRET1")))
-    # access_key.append(str(os.getenv("TWEET_KEY1")))
-    # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET1")))
+    consumer_key.append(str(os.getenv("TWEET_CONSUM1")))
+    consumer_secret.append(str(os.getenv("TWEET_SECRET1")))
+    access_key.append(str(os.getenv("TWEET_KEY1")))
+    access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET1")))
 
     # consumer_key.append(str(os.getenv("TWEET_CONSUM2")))
     # consumer_secret.append(str(os.getenv("TWEET_SECRET2")))
     # access_key.append(str(os.getenv("TWEET_KEY2")))
     # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET2")))
 
+    # consumer_key.append(str(os.getenv("TWEET_CONSUM3")))
+    # consumer_secret.append(str(os.getenv("TWEET_SECRET3")))
+    # access_key.append(str(os.getenv("TWEET_KEY3")))
+    # access_secret.append(str(os.getenv("TWEET_ACCESS_SECRET3")))
     
     
     auth = []
-
-    firstUserID = "1192946702891790336" #Abd Elmadjid Tebboune
+    
+    
+    # 1192946702891790336 #Abd Elmadjid Tebboune
+    # 1204126203654889472
+    # 933256938
+    # 367742122
+    # 1259979718637621253
+    # 259325103
+    # 1253323792446701570
+    # 2680659782
+    # 366091257
+    
+    firstUserID = "1192946702891790336" 
 
 
 
@@ -88,9 +103,9 @@ class TwitterExtractor(NetworkExtractor):
         userAgent.setDaemon(True)
         userAgent.start()
         
-        tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
-        tweetAgent.setDaemon(True)
-        tweetAgent.start()
+        # tweetAgent = Thread(target=TweetExtractor.crawlTweet, args=(self.api,self.graph,self.fullStructure,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
+        # tweetAgent.setDaemon(True)
+        # tweetAgent.start()
 
         # coordinatesAgent = Thread(target=CoordinateExtractor.crawlCoordinates, args=(self.api,self.fullStructure,self.graph,userQueue,coordinatesQueue,placeQueue,urlQueue,mediaQueue,tweetQueue))
         # coordinatesAgent.setDaemon(True)

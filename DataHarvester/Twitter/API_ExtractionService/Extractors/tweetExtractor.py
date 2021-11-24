@@ -60,7 +60,8 @@ class TweetExtractor:
                 while not tweetQueue.empty():
                     tweetQueue.task_done()
                     print("resident tweet inserted..")
-                    TweetExtractor.insertTweet(tweetQueue.get())
+                    # TweetExtractor.insertTweet(tweetQueue.get())
+                    tweetQueue.get()
 
 
             tweetQueue.task_done()

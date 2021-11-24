@@ -1,0 +1,39 @@
+{
+    "video" : [
+        "title",
+        "description",
+        "publishedAt",
+        "channelId",
+        "videoId",
+        "channelTitle",
+        "liveBroadcastContent"
+    ],
+    "playlist" : [
+        "title",
+        "description",
+        "publishedAt",
+        "channelId",
+        "playlistId"
+    ],
+    "channel": [
+        "title",
+        "description",
+        "publishedAt",
+        "channelId"
+    ],
+    "comment":[
+        "id",
+        "comment",
+        "author",
+        "likecount",
+        "publishedAt"
+    ],
+    "comment_reply" : [
+        "parentId",
+        "authorDisplayName",
+        "replyComment",
+        "publishedAt",
+        "likeCount"
+    ]
+}
+
