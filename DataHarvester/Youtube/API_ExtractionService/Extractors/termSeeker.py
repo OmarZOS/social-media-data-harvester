@@ -9,8 +9,8 @@ import networkx
 import random
 from Youtube.API_ExtractionService.Extractors.helper import openURL
 
-from Youtube.API_ExtractionService.Extractors.search_keyword import searchVideo
-from config import MAXDEMANDS, REGIONCODE, YOUTUBE_SEARCH_URL, YOUTUBE_TOKEN   # to become a context.. #one_of_the_somedays..
+from .legacy.search_keyword import searchVideo
+from .config import MAXDEMANDS, REGIONCODE, YOUTUBE_SEARCH_URL, YOUTUBE_TOKEN   # to become a context.. #one_of_the_somedays..
 
 
 class termSeeker:
@@ -21,11 +21,12 @@ class termSeeker:
    
 
     @staticmethod
-    def searchTerm(graph,fullSchema,termQueue,videoQueue,channelQueue,playlistQueue,commentQueue,replyQueue):
+    def searchTerm(graph,fullSchema,termQueue,videoQueue,channelQueue,playlistQueue):
         
         termSeeker.fullStructure = fullSchema
 
         freshTerm = termQueue.get()
+        print(freshTerm)
         # termSeeker.insertUser(user=freshUser,graph=graph)
 
         while True:
@@ -45,25 +46,39 @@ class termSeeker:
                     nextPageToken = url_response.get("nextPageToken")
                     sv.load_search_res(url_response)
                 
-                termSeeker.scrapVideos(sv.videos,graph,videoQueue)
-                termSeeker.scrapChannels(sv.channels,graph,channelQueue)
-                termSeeker.scrapPlaylists(sv.playlists,graph,playlistQueue)
+                print("locked and loaded")
+                for video in sv.videos:
+                    if video["videoId"] in graph: #just to put less noise in the queue
+                        continue
+                    videoQueue.add(video)
+                    print(video)
+                # termSeeker.scrapVideos(sv.videos,graph,videoQueue)
+                print("gone with videos")
+                # termSeeker.scrapChannels(sv.channels,graph,channelQueue)
+                for channel in sv.channels:
+                    if channel["channelId"] in graph: 
+                        continue
+                    channelQueue.add(channel)
+                    print(channel)
+                print("gone with channels")
+                # termSeeker.scrapPlaylists(sv.playlists,graph,playlistQueue)
+                for playlist in sv.playlists:
+                    if playlist["playlistId"] in graph: 
+                        continue
+                    playlistQueue.add(playlist)
+                    print(playlist)
+                print("gone with playlists")
                 
-
-
             except Exception as ex: 
                 
                 print("\033[93m An exception has occured \030[90m")
-                print(ex.with_traceback)
+                print(ex.__cause__)
 
                 #emptying the queue to terminate the thread..
                 while not termQueue.empty():
-                    
                     termQueue.task_done()
-                    
                     termQueue.get()
-                
-
+                    
             termQueue.task_done()
             freshTerm = termQueue.get()
 

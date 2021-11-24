@@ -7,7 +7,7 @@ from pika.spec import Queue
 
 class ResultPublisher:
     def __init__(self,user="omar",password="omar",*args):
-        pass
+        
         self.credentials = pika.PlainCredentials(user,password)
         self.connection= pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))#, credentials= self.credentials
         self.channel= self.connection.channel()

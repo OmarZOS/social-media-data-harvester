@@ -4,6 +4,7 @@ import json
 from networkx.classes import graph
 from networkx.readwrite import json_graph
 from Youtube.API_ExtractionService.Extractors.ChannelExtractor import ChannelExtractor
+from Youtube.API_ExtractionService.Extractors.PlaylistExtractor import PlaylistExtractor
 from Youtube.API_ExtractionService.Extractors.Transformers.YoutubeTransformer import YoutubeTransformer
 from API_ExtractionService.Network_Extractor import NetworkExtractor
 
@@ -12,6 +13,7 @@ import os
 import networkx as nx
 from queue import Queue
 from threading import Thread
+from Youtube.API_ExtractionService.Extractors.VideoExtractor import VideoExtractor
 
 from Youtube.API_ExtractionService.Extractors.termSeeker import termSeeker
 
@@ -53,23 +55,24 @@ class YoutubeExtractor(NetworkExtractor):
 
         #queueing before threading 
 
-        termAgent = Thread(target=termSeeker.searchTerm, args=(self.graph,self.fullStructure,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue))
+        termAgent = Thread(target=termSeeker.searchTerm, args=(self.graph,self.fullStructure,termQueue,channelQueue,videoQueue,playlistQueue))
         termAgent.setDaemon(True)
         termAgent.start()
         
-        videoAgent = Thread(target=VideoExtractor.crawlChannel, args=(self.graph,self.fullStructure,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue,ChannelQueue))
+        videoAgent = Thread(target=VideoExtractor.crawlVideo, args=(self.graph,self.fullStructure,videoQueue))
         videoAgent.setDaemon(True)
         videoAgent.start()
         
-        channelAgent = Thread(target=ChannelExtractor.crawlChannel, args=(self.graph,self.fullStructure,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue,ChannelQueue))
+        channelAgent = Thread(target=ChannelExtractor.crawlChannel, args=(self.graph,self.fullStructure,videoQueue,channelQueue))
         channelAgent.setDaemon(True)
         channelAgent.start()
         
-        playlistAgent = Thread(target=PlaylistExtractor.crawlPlaylist, args=(self.fullStructure,self.graph,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue,ChannelQueue))
+        playlistAgent = Thread(target=PlaylistExtractor.crawlPlaylist, args=(self.fullStructure,self.graph,playlistQueue))
         playlistAgent.setDaemon(True)
         playlistAgent.start()
         
 
+        
         # commentAgent = Thread(target=commentExtractor.crawlcomment, args=(self.fullStructure,self.graph,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue,ChannelQueue))
         # commentAgent.setDaemon(True)
         # commentAgent.start()
@@ -77,7 +80,6 @@ class YoutubeExtractor(NetworkExtractor):
         # replyAgent = Thread(target=replyExtractor.crawlreplys, args=(self.fullStructure,self.graph,termQueue,channelQueue,videoQueue,playlistQueue,commentQueue,replyQueue,ChannelQueue))
         # replyAgent.setDaemon(True)
         # replyAgent.start()
-
 
         termQueue.join()
         videoQueue.join()    

@@ -106,9 +106,9 @@ You can choose the native or containerised one (or both!!).
 
 
 ## **Usage** : 
-- **Networking :** go to the publishing service to verify your channels.
-- **Schema models :** visit API_Models/ to view/modify schema models.
-- **Execution :** go the the main.py file and launch it
+- **Networking :** Go to the publishing service to verify your channels.
+- **Schema models :** Visit API_Models/ to view/modify schema models.
+- **Execution :** Go to the main.py file and launch it
 
 
 

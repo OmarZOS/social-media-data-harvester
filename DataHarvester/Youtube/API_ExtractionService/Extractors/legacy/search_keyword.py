@@ -2,8 +2,8 @@
 from collections import defaultdict
 import json
 import pandas as pd
-from helper import openURL
-from config import YOUTUBE_SEARCH_URL, SAVE_PATH
+from ..helper import openURL
+from ..config import YOUTUBE_SEARCH_URL, SAVE_PATH
 
 class searchVideo:
     def __init__(self, searchTerm, maxResults, regionCode, key):

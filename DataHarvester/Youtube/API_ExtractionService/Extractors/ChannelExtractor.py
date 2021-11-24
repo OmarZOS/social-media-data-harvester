@@ -10,7 +10,7 @@ import random
 from Youtube.API_ExtractionService.Extractors.helper import openURL
 
 from .legacy.videos_channelid import channelVideo
-from config import MAXDEMANDS, REGIONCODE, YOUTUBE_SEARCH_URL, YOUTUBE_TOKEN   # to become a context.. #one_of_the_somedays..
+from .config import MAXDEMANDS, REGIONCODE, YOUTUBE_SEARCH_URL, YOUTUBE_TOKEN   # to become a context.. #one_of_the_somedays..
 
 
 class ChannelExtractor:
@@ -21,17 +21,18 @@ class ChannelExtractor:
    
 
     @staticmethod
-    def crawlChannel(graph,fullSchema,termQueue,videoQueue,channelQueue,playlistQueue,commentQueue,replyQueue):
+    def crawlChannel(graph,fullSchema,videoQueue,channelQueue):
         
         ChannelExtractor.fullStructure = fullSchema
 
         freshChannel = channelQueue.get()
-        ChannelExtractor.insertUser(user=freshChannel,graph=graph)
 
         while True:
             # print("Abagain")
             
-            sv = channelVideo(freshchannel, MAXDEMANDS , REGIONCODE , YOUTUBE_TOKEN)           
+            ChannelExtractor.insertChannel(user=freshChannel,graph=graph)
+            
+            sv = channelVideo(freshchannel["channelId"], MAXDEMANDS , REGIONCODE , YOUTUBE_TOKEN)           
             
             try:
             
@@ -46,7 +47,7 @@ class ChannelExtractor:
                     sv.load_channel_videos(url_response)
 
                 
-                ChannelExtractor.scrapVideos(sv.videos,graph,videoQueue)
+                ChannelExtractor.scrapVideos(sv.videos,graph,videoQueue,freshchannel)
                 
             except Exception as ex: 
                 
@@ -60,19 +61,23 @@ class ChannelExtractor:
                     
                     channelQueue.get()
                 
-
             channelQueue.task_done()
             freshchannel = channelQueue.get()
 
     @staticmethod
-    def insertChannel(args):
-        pass
+    def insertChannel(freshChannel,graph):
+        if freshChannel["channelId"] in graph :
+            return
+        graph.add_nodes_from(freshChannel["channelId"],[k for k in freshChannel.items()])
 
     @staticmethod
-    def scrapVideos(vids,graph,videoQueue:Queue):
+    def scrapVideos(vids,graph,videoQueue,freshchannel):
         for video in vids:
             if video["videoId"] not in graph: #just to put less noise in the queue
                 videoQueue.add(video)
-            print(video)
+            
+            graph.add_edge(video["videoId"],freshchannel["channelId"],other= "includes")
+            
+            
             
             
