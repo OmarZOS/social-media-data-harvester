@@ -125,7 +125,7 @@ You can choose the native or containerised one (or both!!).
  - [x] **Twitter** support
  - [x] **Youtube** support
  - [ ] **LinkedIn** support
- - [ ] **Facebook** support
+ - [x] **Facebook** support
  - [ ] **Instagram** support
  - [ ] Graphical user interface
  - [ ] Encrypting network circulating data
