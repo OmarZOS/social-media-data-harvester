@@ -1,30 +1,16 @@
 
 
-import pika
-from pika.exchange_type import ExchangeType
-from pika.spec import Queue
+from abc import ABC, abstractmethod
 
-
-class ResultPublisher:
-    def __init__(self,user="omar",password="omar",*args):
-        
-        self.credentials = pika.PlainCredentials(user,password)
-        self.connection= pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))#, credentials= self.credentials
-        self.channel= self.connection.channel()
-    
-        self.channel.exchange_declare(exchange='data', exchange_type=ExchangeType.direct)
-        
-
-    
-    def addQueue(self,apiName):
-        self.channel.queue_declare(queue= apiName)
-        self.channel.queue_bind(exchange="data", queue=apiName, routing_key=apiName)
-        
-    
-    def publish(self,api,data):
-        # print("publishing")
-        self.channel.basic_publish(exchange="data",routing_key = api, body = data)
-            
+class publishingService(ABC):
+    def __init__(self, *args):
+        super(publishingService, self).__init__(*args)
+    @abstractmethod
+    def updateVariable(self,**kwargs):
+        pass
+    @abstractmethod
+    def publish(self,routeName,data):
+        pass        
     
         
 

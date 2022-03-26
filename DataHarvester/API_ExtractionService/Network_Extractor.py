@@ -2,36 +2,51 @@
 
 from abc import abstractmethod
 
+
+
+import json
+from networkx.readwrite import json_graph
+from networkx.classes.function import is_empty
+
 from API_ExtractionService.Extractors.Transformers.API_Transformer import API_Transformer
 
 
 class NetworkExtractor:
 
 
-    @abstractmethod # it didn't work out this way..
-    def __init__(self,apiNam,prox,structure):
-        self.proxy = prox
-        self._apiName=apiNam
-        print("initialising transformer..")
-        self.transformer = API_Transformer(self.initTransformer(structure))
-
-    @abstractmethod
-    def initTransformer(self,*args):
-        pass
-
-    @abstractmethod
-    def connectAPI(key):
-        pass
+    def __init__(self,api,context,structure,publisher,roadmap=[]):
+        
+        self.api=api
+        self.context=context
+        self.fullStructure=structure
+        self.publisher=publisher
+        self.roadmap=roadmap
+    
+    def publish_data(self,payload):
+        # delivering payload
+        try:
+            self.publisher.publish(self.api,json.dumps(payload))
+        except Exception as e:
+            print(f"{str(e)}")
+        
+    def data_publisher(self,func):
+        def wrapper_function(*args, **kwargs):
+            func(*args,  **kwargs)
+            if(not is_empty(self.graph)):
+                payload = json.loads(json_graph.dumps(self.graph))
+                payload["road_map"] = []
+                self.publish_data(payload)
+            else:
+                print("Nothing to publish..")
+        return wrapper_function
 
     # @property.setter
     # def proxy(self, prox : API_ExtractionProxy):
     #     self.myProxy = prox
     
-
     @property
     def getProxy(self):
         return self.proxy  
-
 
     @property
     def apiName(self):

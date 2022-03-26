@@ -98,13 +98,6 @@ You can choose the native or containerised one (or both!!).
 	#enter credentials (user,password)
 	cypher-shell -u neo4j -p test
 
-## **kafka container** :
-	
-	docker pull mongo
-	docker pull confluentinc/cp-schema-registry
-	docker pull cp-enterprise-control-center
-
-
 ## **Usage** : 
 - **Networking :** Go to the publishing service to verify your channels.
 - **Schema models :** Visit API_Models/ to view/modify schema models.
@@ -112,21 +105,33 @@ You can choose the native or containerised one (or both!!).
 
 
 
-## **Progress** : 
- - [ ] Current code consistency
- - [x] Multithreading 
- - [x] Containerisation
- - [ ] Natural language processing
- - [x] Graph oriented database storage
- - [ ] Document oriented database storage
- - [ ] Infrastructure as code
- - [ ] Database as a service
- - [ ] Communications as a service
- - [x] **Twitter** support
- - [x] **Youtube** support
- - [ ] **LinkedIn** support
- - [x] **Facebook** support
- - [ ] **Instagram** support
- - [ ] Graphical user interface
- - [ ] Encrypting network circulating data
 
+>---
+>## **Phoros** :
+>This repository has evolved to become a cloud service for distributed online social data extraction. This repository is no longer supported and is used as an abstract package for the Phoros variants.
+> You can visit our [roadmap](https://github.com/users/OmarZOS/projects/1), here are the repositories that are linked to the phoros project:
+>	- [Context](https://github.com/OmarZOS/scalable-context-aware-application).
+>	- [Extractors](https://github.com/OmarZOS/remote-extraction-proxy-and-worker).
+>	- [Transformers](https://github.com/OmarZOS/data-transformation-reverse-proxy).
+>	- [Dashboard](https://github.com/OmarZOS/phoros-dashboard).
+>	- [Browser extension](https://github.com/OmarZOS/phoros-extension).
+>	- [Storage server](https://github.com/OmarZOS/social-graph-storage).
+>	- [Phoros API](https://github.com/OmarZOS/phoros-rest-server).
+>## **Progress** (for the phoros project): 
+> - [x] Current code consistency.
+> - [x] Multithreading .
+> - [x] Containerisation.
+> - [ ] Natural language processing.
+> - [x] Graph oriented database storage.
+> - [x] Document oriented database storage.
+> - [x] Infrastructure as code.
+> - [x] Database as a service.
+> - [x] Communications as a service.
+> - [x] **Twitter** support.
+> - [x] **Youtube** support.
+> - [x] **LinkedIn** support.
+> - [x] **Facebook** support.
+> - [ ] **Instagram** support.
+> - [x] Graphical user interface.
+> - [x] Encrypting network circulating data.
+>---
